@@ -15,14 +15,16 @@ class CustomChatAgent:
         self,
         tools: List[Tool],
         name: str,
-        personality: str,
+        description: str,
         temperature: float,
-        examples: List[Dict],
+        samples: List[Dict],
+        personality: str,
     ):
         prompt = CustomPromptTemplate(
             tools=tools,
             name=name,
             personality=personality,
+            description=description,
             # This omits the `agent_scratchpad`, `tools`, and `tool_names`
             # variables because those are generated dynamically
             # This includes the `intermediate_steps` variable because that is needed
@@ -53,8 +55,8 @@ class CustomChatAgent:
             agent=agent, tools=tools, verbose=True, memory=memory
         )
 
-        if examples:
-            self.refine_chain = ExampleRefineChain(examples)
+        if samples:
+            self.refine_chain = ExampleRefineChain(samples)
         else:
             self.refine_chain = None
 

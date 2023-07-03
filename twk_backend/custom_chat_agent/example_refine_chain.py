@@ -1,12 +1,13 @@
+import logging
 from typing import Dict, List
 
 from langchain import PromptTemplate
 from langchain.chains import LLMChain
-from langchain.llms import OpenAI
-from langchain.prompts.example_selector import SemanticSimilarityExampleSelector
-from langchain.vectorstores import Chroma
 from langchain.embeddings import OpenAIEmbeddings
-
+from langchain.llms import OpenAI
+from langchain.prompts.example_selector import \
+    SemanticSimilarityExampleSelector
+from langchain.vectorstores import Chroma
 
 refine_template = """
 Here is a Human input and an AI response:
@@ -14,7 +15,7 @@ Here is a Human input and an AI response:
 Input: {input}
 Response: {response}
 ---
-Please modify the AI response to match the tone of the responses
+Please modify the AI response to match the writing tone of the responses
 in the following examples as closely as possible while ensuring
 the information in the original response remains unchanged.
 
@@ -56,9 +57,20 @@ class ExampleRefineChain:
 
         self.refine_chain = LLMChain(llm=llm, prompt=refine_prompt)
 
+    def extract_response(self, response):
+        keyword = "Response: "
+        if keyword in response:
+            return response[response.index(keyword) + len(keyword):]
+        keyword = "AI Response: "
+        if keyword in response:
+            return response[response.index(keyword) + len(keyword):]
+        return response
+
     def refine_response(self, input: str, response: str) -> str:
+        logging.info(f"Before refining: {input}")
         selected_examples = self.example_selector.select_examples({"input": input})
         refined_response: str = self.refine_chain.predict(
             input=input, response=response, examples=selected_examples
         )
-        return refined_response
+        logging.info(f"After refining: {refined_response}")
+        return self.extract_response(refined_response)

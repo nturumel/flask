@@ -7,7 +7,7 @@ from langchain.schema import HumanMessage
 from twk_backend.custom_chat_agent.utils import convert_entities_to_string
 
 custom_template = """
-Your name is {name}. {personality}.
+Your name is {name}. {description}. {personality}.
 Have the following conversation with Human, respond  to them, and answer their questions as best you can.
 You have access to the following tools:
 
@@ -55,11 +55,14 @@ class CustomPromptTemplate(BaseChatPromptTemplate):
     personality: str
     # The name
     name: str
+    # The description
+    description: str
 
     def format_messages(self, **kwargs) -> str:
         # Set up basic values for templates
         kwargs["name"] = self.name
         kwargs["personality"] = self.personality
+        kwargs["description"] = self.description
         kwargs["entities"] = convert_entities_to_string(kwargs["entities"])
         # Get the intermediate steps (AgentAction, Observation tuples)
         # Format them in a particular way

@@ -11,7 +11,7 @@ def get_int_agent_data():
     tools = []
     with open(os.path.join("tests", "data", "test_datastore.json")) as f:
         tool = {}
-        tool["toolType"] = "Datastore"
+        tool["toolType"] = "datastore"
         tool["toolConfig"] = json.load(f)
         tools.append(tool)
 
@@ -19,6 +19,7 @@ def get_int_agent_data():
     data["agent"] = {
         "name": "TestAgent",
         "personality": "You speak like a pirate",
+        "description": "You are a test agent",
         "temperature": 0,
     }
     data["sessionId"] = "test"
@@ -41,9 +42,9 @@ def test_handle_init_and_chat_with_agent():
         assert len(response.text) > 0
 
         response = client.post(
-            "/chatWithAgent", json={"sessionId": "test", "query": "What are the 48 Laws of power?"}
+            "/chatWithAgent",
+            json={"sessionId": "test", "query": "What are the 48 Laws of power?"},
         )
         logging.info(f"{response}")
         assert response.status_code == 200
         assert len(response.text) > 0
-

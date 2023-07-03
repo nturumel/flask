@@ -10,9 +10,9 @@ from twk_backend.tools.datastore_query.datastore_query_tool import \
 
 def get_tool(tool_type: str, tool_config: Dict) -> Tool:
     match tool_type:
-        case "Calculator":
+        case "calculator":
             return get_calculator_tool()
-        case "Datastore":
+        case "datastore":
             datastore_id: str = tool_config["id"]
             datastore_name: str = tool_config["name"]
             datastore_description: str = tool_config.get("description")

@@ -8,6 +8,13 @@ from langchain.tools import Tool
 from twk_backend.custom_chat_agent.custom_chat_agent import CustomChatAgent
 from twk_backend.tools.utils import get_tool
 
+# Set up root logger to write messages with level INFO or higher to stdout.
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    filename="app.log",
+)
+
 app = Flask(__name__)
 
 # Create a TTLCache object with a maximum size and a time to live (in seconds)
@@ -35,13 +42,19 @@ def handle_initialize_agent():
     data = request.get_json()
     session_id = data["sessionId"]
 
+    # Check if session already initialised
+    if session_id in chat_agent_cache:
+        logging.info(f"Agent already initialised for input: {data}")
+        return jsonify({"sessionId": session_id}), 200
+
     try:
-        logging.info(f"Recieved input: {data}")
+        logging.info(f"Received input: {data}")
 
         # Extract components
         agent = data["agent"]
-        examples = data.get("examples")
+        samples = data.get("samples")
         tool_list = data["toolList"]
+        logging.info("Components extracted")
 
         # Setup tools
         tools: List[Tool] = []
@@ -50,19 +63,21 @@ def handle_initialize_agent():
             tool_config = tool["toolConfig"]
             tool = get_tool(tool_type=tool_type, tool_config=tool_config)
             tools.append(tool)
+        logging.info("Tool List Initialised")
 
         chat_agent = CustomChatAgent(
             name=agent["name"],
-            personality=agent["personality"],
+            personality=agent.get("personality") or "",
             temperature=agent["temperature"],
+            description=agent["description"],
             tools=tools,
-            examples=examples,
+            samples=samples,
         )
         chat_agent_cache[session_id] = chat_agent
         return jsonify({"sessionId": session_id}), 200
     except Exception as e:
         logging.error(f"Error: {e}")
-        return jsonify({"sessionId": session_id, "error": e}), 500
+        return jsonify({"sessionId": session_id, "error": str(e)}), 500
 
 
 @app.route("/chatWithAgent", methods=["POST"])
@@ -94,4 +109,4 @@ def handle_chat_with_agent():
         return jsonify(response), 200
     except Exception as e:
         logging.error(f"Error: {e}")
-        return jsonify({"sessionId": session_id, "error": e}), 500
+        return jsonify({"sessionId": session_id, "error": str(e)}), 500
