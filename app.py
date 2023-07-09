@@ -20,4 +20,8 @@ console_handler.setFormatter(formatter)
 logging.getLogger('').addHandler(console_handler)
 
 if __name__ == "main":
+    print("we are inside of main")
+    app.run(host="0.0.0.0", port=5000)
+else:
+    print("we are not inside of main")
     app.run(host="0.0.0.0", port=5000)
