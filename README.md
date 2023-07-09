@@ -35,6 +35,14 @@ And the following dev dependencies:
 Once the dependencies are installed, you can start the application with the following command:
 
 ```bash
+FLASK_APP=main
+
+flask run
+```
+
+Windows
+```bash
+set FLASK_APP=main
 flask run
 ```
 
