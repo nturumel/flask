@@ -4,6 +4,7 @@ import sys
 from dotenv import load_dotenv
 env = load_dotenv(".env.local")
 from twk_backend.router import app
+from gevent.pywsgi import WSGIServer
 
 # Set up root logger to write messages with level INFO or higher to stdout.
 logging.basicConfig(level=logging.INFO,
@@ -21,7 +22,9 @@ logging.getLogger('').addHandler(console_handler)
 
 if __name__ == "main":
     print("we are inside of main")
-    app.run(host="0.0.0.0", port=5000)
+    http_server = WSGIServer(('', 5000), app)
+    http_server.serve_forever()
 else:
     print("we are not inside of main")
-    app.run(host="0.0.0.0", port=5000)
+    http_server = WSGIServer(('', 5000), app)
+    http_server.serve_forever()
