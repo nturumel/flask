@@ -21,4 +21,5 @@ console_handler.setFormatter(formatter)
 logging.getLogger('').addHandler(console_handler)
 
 if __name__ == "main":
-    app.run(port=5000)  #
+    app.run(port=5000, host='0.0.0.0:5000')  #
+    
