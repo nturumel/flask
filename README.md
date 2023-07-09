@@ -14,21 +14,21 @@ poetry install
 
 This will install the following dependencies:
 
-* Flask: ^2.3.2
-* cachetools: ^5.3.1
-* python-env-loader: ^0.0.2
-* python-dotenv: ^1.0.0
-* openai: ^0.27.8
-* tiktoken: ^0.4.0
+- Flask: ^2.3.2
+- cachetools: ^5.3.1
+- python-env-loader: ^0.0.2
+- python-dotenv: ^1.0.0
+- openai: ^0.27.8
+- tiktoken: ^0.4.0
 
 And the following dev dependencies:
 
-* pytest: ^7.3.2
-* flake8: ^6.0.0
-* black: ^23.3.0
-* mypy: ^1.3.0
-* sphinx: ^7.0.1
-* bandit: ^1.7.5
+- pytest: ^7.3.2
+- flake8: ^6.0.0
+- black: ^23.3.0
+- mypy: ^1.3.0
+- sphinx: ^7.0.1
+- bandit: ^1.7.5
 
 ## Running the application
 
@@ -44,5 +44,5 @@ This will start the Flask server and the application will be accessible at `http
 
 The application exposes two endpoints:
 
-* `/initialiseAgent`: This endpoint accepts a POST request with a JSON body. It initializes a chat agent and associates it with the provided session ID.
-* `/chatWithAgent`: This endpoint also accepts a POST request with a JSON body. It uses the provided session ID to retrieve a chat agent from the cache and returns a response from the agent to the provided query.
+- `/initialiseAgent`: This endpoint accepts a POST request with a JSON body. It initializes a chat agent and associates it with the provided session ID.
+- `/chatWithAgent`: This endpoint also accepts a POST request with a JSON body. It uses the provided session ID to retrieve a chat agent from the cache and returns a response from the agent to the provided query.
