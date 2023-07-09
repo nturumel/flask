@@ -38,3 +38,5 @@ nosetests.xml
 coverage.xml
 
 app.log
+
+venv/
